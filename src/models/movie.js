@@ -22,7 +22,7 @@ export default class MovieModel {
     this.userDetails = {
       personalRating: movie[`user_details`][`personal_rating`],
       watchlist: movie[`user_details`][`watchlist`],
-      alreadyWatch: movie[`user_details`][`already_watch`],
+      alreadyWatched: movie[`user_details`][`already_watched`],
       watchingDate: movie[`user_details`][`watching_date`],
       favorite: movie[`user_details`][`favorite`]
     };

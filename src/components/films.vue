@@ -1,6 +1,6 @@
 <template>
   <section class="films">
-    <FilmsList v-bind:movies="movies" quantity="5" v-bind:sort-type="sortType" title="All movies. Upcoming" />
+    <FilmsList v-bind:movies="movies" quantity="5" v-bind:sort-type="sortType" v-bind:filter-type="filterType" title="All movies. Upcoming" />
     <FilmsList v-bind:movies="movies" quantity="2" sort-type="rating" title="Top rated" is-extra="true" />
     <FilmsList v-bind:movies="movies" quantity="2" sort-type="comments" title="Most commented" is-extra="true" />
   </section>
@@ -16,7 +16,8 @@ export default {
   },
   props: [
     `movies`,
-    `sortType`
+    `sortType`,
+    `filterType`
   ]
 };
 </script>

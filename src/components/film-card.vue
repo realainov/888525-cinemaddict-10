@@ -21,9 +21,9 @@
 <script>
 export default {
   name: `FilmCard`,
-  props: {
-    movie: Object
-  },
+  props: [
+    `movie`
+  ],
   data() {
     const runtime = this.movie.filmInfo.runtime;
 

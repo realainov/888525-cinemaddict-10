@@ -6,7 +6,7 @@
         <FilmCard v-for="movie in sortMovies().slice(0, counter)" :key="movie.id" v-bind:movie="movie" />
       </div>
 
-      <ShowMore v-if="!isExtra" v-show="counter < movies.length" @click.native="counter += 5" />
+      <ShowMore v-if="!isExtra" v-show="counter < filteredMovies.length" @click.native="counter += 5" />
     </section>
 </template>
 
@@ -25,17 +25,32 @@ export default {
     `movies`,
     `quantity`,
     `title`,
-    `sortType`
+    `sortType`,
+    `filterType`
   ],
   methods: {
     sortMovies() {
       switch (this.sortType) {
         case `date`:
-          return this.movies.slice().sort((a, b) => new Date(b.filmInfo.release.date) - new Date(a.filmInfo.release.date));
+          return this.filteredMovies.sort((a, b) => new Date(b.filmInfo.release.date) - new Date(a.filmInfo.release.date));
         case `rating`:
-          return this.movies.slice().sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating);
+          return this.filteredMovies.sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating);
         case `comment`:
-          return this.movies.slice().sort((a, b) => b.comments.length - a.comments.length);
+          return this.filteredMovies.sort((a, b) => b.comments.length - a.comments.length);
+        default:
+          return this.filteredMovies;
+      }
+    },
+    filterMovies() {
+      switch (this.filterType) {
+        case `all`:
+          return this.movies.slice();
+        case `watchlist`:
+          return this.movies.filter((movie) => movie.userDetails.watchlist);
+        case `history`:
+          return this.movies.filter((movie) => movie.userDetails.alreadyWatched);
+        case `favorite`:
+          return this.movies.filter((movie) => movie.userDetails.favorite);
         default:
           return this.movies.slice();
       }
@@ -45,6 +60,11 @@ export default {
     return {
       counter: +this.quantity
     };
+  },
+  computed: {
+    filteredMovies() {
+      return this.filterMovies();
+    }
   }
 };
 </script>

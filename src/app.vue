@@ -7,11 +7,11 @@
     </header>
 
     <main class="main">
-      <Navigation />
+      <Navigation @click="setFilterType" v-bind:movies="movies" />
 
       <Sort @click="setSortType" />
 
-      <Films v-bind:sortType="sortType" v-bind:movies="movies" />
+      <Films v-bind:sortType="sortType" v-bind:filterType="filterType" v-bind:movies="movies" />
     </main>
 
 
@@ -41,12 +41,16 @@ export default {
   data() {
     return {
       movies: [],
-      sortType: `default`
+      sortType: `default`,
+      filterType: `all`
     };
   },
   methods: {
     setSortType(sortType) {
       this.sortType = sortType;
+    },
+    setFilterType(filterType) {
+      this.filterType = filterType;
     }
   },
   components: {
