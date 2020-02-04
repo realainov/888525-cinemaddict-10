@@ -7,7 +7,7 @@
       <span class="film-card__duration"> {{ runtime }} </span>
       <span class="film-card__genre"> {{ genre }} </span>
     </p>
-    <img :src=poster alt="" class="film-card__poster">
+    <img :src="poster" alt="" class="film-card__poster" @click="openPopup">
     <p class="film-card__description"> {{ description }} </p>
     <a class="film-card__comments">{{ commentsQuantity }} comments</a>
     <form class="film-card__controls">
@@ -40,6 +40,11 @@ export default {
       runtime: `${hours ? `${hours}H` : ``} ${minutes ? `${minutes}M` : ``}`,
       description: this.movie.filmInfo.description.length < 140 ? this.movie.filmInfo.description : `${this.movie.filmInfo.description.substring(0, 140)}...`
     };
+  },
+  methods: {
+    openPopup() {
+      this.$parent.$parent.$emit(`click`, this.movie);
+    }
   }
 };
 </script>

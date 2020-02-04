@@ -11,7 +11,7 @@
 
       <Sort @click="setSortType" />
 
-      <Films v-bind:sortType="sortType" v-bind:filterType="filterType" v-bind:movies="movies" />
+      <Films v-bind:sortType="sortType" v-bind:filterType="filterType" v-bind:movies="movies" @click="openPopup" />
     </main>
 
 
@@ -21,6 +21,8 @@
         <p>130 291 movies inside</p>
       </section>
     </footer>
+
+    <FilmDetails v-bind:movie="currentMovie" v-show="!currentMovie.empty" />
   </div>
 </template>
 
@@ -31,6 +33,7 @@ import Films from './components/films.vue';
 import Navigation from './components/navigation.vue';
 import Sort from './components/sort.vue';
 import Profile from './components/profile.vue';
+import FilmDetails from './components/film-details.vue';
 import MovieModel from './models/movie';
 
 const URL = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
@@ -42,7 +45,36 @@ export default {
     return {
       movies: [],
       sortType: `default`,
-      filterType: `all`
+      filterType: `all`,
+      currentMovie: {
+        empty: true,
+        id: ``,
+        comments: [],
+        filmInfo: {
+          title: ``,
+          alternativeTitle: ``,
+          totalRating: ``,
+          poster: ``,
+          ageRating: ``,
+          director: ``,
+          writers: [],
+          actors: [],
+          release: {
+            date: ``,
+            releaseCountry: ``
+          },
+          runtime: ``,
+          genre: [],
+          description: ``
+        },
+        userDetails: {
+          personalRating: ``,
+          watchlist: null,
+          alreadyWatched: null,
+          watchingDate: ``,
+          favorite: null
+        }
+      }
     };
   },
   methods: {
@@ -51,13 +83,17 @@ export default {
     },
     setFilterType(filterType) {
       this.filterType = filterType;
+    },
+    openPopup(movie) {
+      this.currentMovie = movie;
     }
   },
   components: {
     Films,
     Navigation,
     Sort,
-    Profile
+    Profile,
+    FilmDetails
   },
   mounted() {
     axios
