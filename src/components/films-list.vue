@@ -32,13 +32,13 @@ export default {
     sortMovies() {
       switch (this.sortType) {
         case `date`:
-          return this.filteredMovies.sort((a, b) => new Date(b.filmInfo.release.date) - new Date(a.filmInfo.release.date));
+          return this.filteredMovies.slice().sort((a, b) => new Date(b.filmInfo.release.date) - new Date(a.filmInfo.release.date));
         case `rating`:
-          return this.filteredMovies.sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating);
+          return this.filteredMovies.slice().sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating);
         case `comment`:
-          return this.filteredMovies.sort((a, b) => b.comments.length - a.comments.length);
+          return this.filteredMovies.slice().sort((a, b) => b.comments.length - a.comments.length);
         default:
-          return this.filteredMovies;
+          return this.filteredMovies.slice();
       }
     },
     filterMovies() {

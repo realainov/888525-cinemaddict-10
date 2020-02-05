@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export const generateString = (quantity) => {
   let rnd = ``;
 
@@ -6,4 +8,8 @@ export const generateString = (quantity) => {
   }
 
   return rnd.substring(0, quantity);
+};
+
+export const formatDate = (date) => {
+  return moment(date).format(`DD MMMM YYYY`);
 };

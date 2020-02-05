@@ -1,6 +1,6 @@
 <template>
   <article class="film-card">
-    <h3 class="film-card__title"> {{ title }} </h3>
+    <h3 class="film-card__title" @click="openPopup"> {{ title }} </h3>
     <p class="film-card__rating"> {{ totalRating }} </p>
     <p class="film-card__info">
       <span class="film-card__year"> {{ date }} </span>
@@ -9,7 +9,7 @@
     </p>
     <img :src="poster" alt="" class="film-card__poster" @click="openPopup">
     <p class="film-card__description"> {{ description }} </p>
-    <a class="film-card__comments">{{ commentsQuantity }} comments</a>
+    <a class="film-card__comments" @click="openPopup">{{ commentsQuantity }} comments</a>
     <form class="film-card__controls">
       <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>
       <button class="film-card__controls-item button film-card__controls-item--mark-as-watched">Mark as watched</button>

@@ -22,7 +22,7 @@
       </section>
     </footer>
 
-    <FilmDetails v-if="currentMovie" v-bind:movie="currentMovie" @click="setCurrentMovie" />
+    <FilmDetails v-if="currentMovie" v-bind:movie="currentMovie" @close="setCurrentMovie"  />
 
   </div>
 </template>

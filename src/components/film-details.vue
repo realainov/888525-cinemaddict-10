@@ -52,7 +52,7 @@
               <tr class="film-details__row">
                 <td class="film-details__term">Genres</td>
                 <td class="film-details__cell">
-                  <span class="film-details__genre" v-bind:for="(genre, index) in genres" v-bind:key="index"> {{ genre }} </span>
+                  <span class="film-details__genre" v-for="(genre, index) in genres" :key="index"> {{ genre }} </span>
                 </td>
               </tr>
             </table>
@@ -168,6 +168,8 @@
 </template>
 
 <script>
+import {formatDate} from '../utils/common';
+
 export default {
   name: `FilmDetails`,
   props: [
@@ -185,7 +187,7 @@ export default {
       totalRating: this.movie.filmInfo.totalRating,
       director: this.movie.filmInfo.director,
       ageRating: this.movie.filmInfo.ageRating,
-      releaseDate: this.movie.filmInfo.release.date,
+      releaseDate: formatDate(this.movie.filmInfo.release.date),
       runtime: `${hours ? `${hours}H` : ``} ${minutes ? `${minutes}M` : ``}`,
       country: this.movie.filmInfo.release.releaseCountry,
       genres: this.movie.filmInfo.genre,
@@ -204,8 +206,18 @@ export default {
   },
   methods: {
     closePopup() {
-      this.$emit(`click`, null);
+      this.$emit(`close`, null);
     }
+  },
+  created() {
+    window.addEventListener(`keydown`, (evt) => {
+      const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
+
+      if (isEscKey) {
+        this.closePopup();
+      }
+    });
+
   }
 };
 </script>
