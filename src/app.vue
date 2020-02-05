@@ -11,7 +11,7 @@
 
       <Sort @click="setSortType" />
 
-      <Films v-bind:sortType="sortType" v-bind:filterType="filterType" v-bind:movies="movies" @click="openPopup" />
+      <Films v-bind:sortType="sortType" v-bind:filterType="filterType" v-bind:movies="movies" @click="setCurrentMovie" />
     </main>
 
 
@@ -22,7 +22,8 @@
       </section>
     </footer>
 
-    <FilmDetails v-bind:movie="currentMovie" v-show="!currentMovie.empty" />
+    <FilmDetails v-if="currentMovie" v-bind:movie="currentMovie" @click="setCurrentMovie" />
+
   </div>
 </template>
 
@@ -46,35 +47,7 @@ export default {
       movies: [],
       sortType: `default`,
       filterType: `all`,
-      currentMovie: {
-        empty: true,
-        id: ``,
-        comments: [],
-        filmInfo: {
-          title: ``,
-          alternativeTitle: ``,
-          totalRating: ``,
-          poster: ``,
-          ageRating: ``,
-          director: ``,
-          writers: [],
-          actors: [],
-          release: {
-            date: ``,
-            releaseCountry: ``
-          },
-          runtime: ``,
-          genre: [],
-          description: ``
-        },
-        userDetails: {
-          personalRating: ``,
-          watchlist: null,
-          alreadyWatched: null,
-          watchingDate: ``,
-          favorite: null
-        }
-      }
+      currentMovie: null
     };
   },
   methods: {
@@ -84,9 +57,9 @@ export default {
     setFilterType(filterType) {
       this.filterType = filterType;
     },
-    openPopup(movie) {
+    setCurrentMovie(movie) {
       this.currentMovie = movie;
-    }
+    },
   },
   components: {
     Films,
