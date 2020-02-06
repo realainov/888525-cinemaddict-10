@@ -1,4 +1,4 @@
-export default class MovieModel {
+export default class Movie {
   constructor(movie) {
     this.id = movie[`id`];
     this.comments = movie[`comments`];

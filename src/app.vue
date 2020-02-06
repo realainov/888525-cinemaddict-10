@@ -3,42 +3,42 @@
     <header class="header">
       <h1 class="header__logo logo">Cinemaddict</h1>
 
-      <Profile />
+      <Profile :movies="movies" />
     </header>
 
     <main class="main">
-      <Navigation @click="setFilterType" v-bind:movies="movies" />
+      <Navigation @click="setFilterType" :movies="movies" />
 
       <Sort @click="setSortType" />
 
-      <Films v-bind:sortType="sortType" v-bind:filterType="filterType" v-bind:movies="movies" @click="setCurrentMovie" />
+      <Films :sortType="sortType" :filterType="filterType" :movies="movies" @click="setCurrentMovie" />
     </main>
 
 
     <footer class="footer">
       <section class="footer__logo logo logo--smaller">Cinemaddict</section>
       <section class="footer__statistics">
-        <p>130 291 movies inside</p>
+        <p>{{ movies.length }} movies inside</p>
       </section>
     </footer>
 
-    <FilmDetails v-if="currentMovie" v-bind:movie="currentMovie" @close="setCurrentMovie"  />
+    <FilmDetails v-if="currentMovie" :movie="currentMovie" @close="setCurrentMovie"  />
 
   </div>
 </template>
 
 <script>
 import axios from 'axios';
-import {generateString} from './utils/common.js';
+// import {generateString} from './utils/common.js';
 import Films from './components/films.vue';
 import Navigation from './components/navigation.vue';
 import Sort from './components/sort.vue';
 import Profile from './components/profile.vue';
 import FilmDetails from './components/film-details.vue';
-import MovieModel from './models/movie';
+import Movie from './models/movie';
 
 const URL = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
-const AUTHORIZATION = `Basic ${generateString(6)}`;
+const AUTHORIZATION = `Basic ieieuioeuio`;
 
 export default {
   name: `app`,
@@ -71,7 +71,7 @@ export default {
   mounted() {
     axios
       .get(`${URL}/movies`, {headers: {Authorization: AUTHORIZATION}})
-      .then((movies) => (this.movies = movies.data.map((movie) => new MovieModel(movie))));
+      .then((movies) => (this.movies = movies.data.map((movie) => new Movie(movie))));
   }
 };
 </script>

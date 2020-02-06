@@ -11,14 +11,33 @@
     <p class="film-card__description"> {{ description }} </p>
     <a class="film-card__comments" @click="openPopup">{{ commentsQuantity }} comments</a>
     <form class="film-card__controls">
-      <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>
-      <button class="film-card__controls-item button film-card__controls-item--mark-as-watched">Mark as watched</button>
-      <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
+      <button
+        class="film-card__controls-item button film-card__controls-item--add-to-watchlist"
+        @click.prevent="addToWatchlist"
+      >
+        Add to watchlist
+      </button>
+      <button
+        class="film-card__controls-item button film-card__controls-item--mark-as-watched"
+        @click.prevent="markAsWatched"
+      >
+        Mark as watched
+      </button>
+      <button
+        class="film-card__controls-item button film-card__controls-item--favorite"
+        @click.prevent="markAsFavorite"
+      >
+        Mark as favorite
+      </button>
     </form>
   </article>
 </template>
 
 <script>
+import axios from 'axios';
+
+const URL = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
+
 export default {
   name: `FilmCard`,
   props: [
@@ -38,12 +57,30 @@ export default {
       poster: this.movie.filmInfo.poster,
       date: new Date(this.movie.filmInfo.release.date).getFullYear(),
       runtime: `${hours ? `${hours}H` : ``} ${minutes ? `${minutes}M` : ``}`,
-      description: this.movie.filmInfo.description.length < 140 ? this.movie.filmInfo.description : `${this.movie.filmInfo.description.substring(0, 140)}...`
+      description: this.movie.filmInfo.description.length < 140 ? this.movie.filmInfo.description : `${this.movie.filmInfo.description.substring(0, 140)}...`,
     };
   },
   methods: {
     openPopup() {
       this.$parent.$parent.$emit(`click`, this.movie);
+    },
+    addToWatchlist() {
+      this.movie.userDetails.watchlist = !this.movie.userDetails.watchlist;
+    },
+    markAsWatched() {
+      this.movie.userDetails.alreadyWatched = !this.movie.userDetails.alreadyWatched;
+    },
+    markAsFavorite() {
+      this.movie.userDetails.favorite = !this.movie.userDetails.favorite;
+    }
+  },
+  watch: {
+    movie: {
+      handler(renewedMovie) {
+        axios
+          .put(`${URL}/movies/${renewedMovie.id}`, renewedMovie.toRAW());
+      },
+      deep: true
     }
   }
 };

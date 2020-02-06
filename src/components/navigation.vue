@@ -4,7 +4,7 @@
       href="#all"
       class="main-navigation__item"
       :class="{'main-navigation__item--active': filterType === `all`}"
-      @click="setFilterType(`all`)"
+      @click="setFilterType(`all`, movies)"
     >
       All movies
     </a>
@@ -12,7 +12,7 @@
       href="#watchlist"
       class="main-navigation__item"
       :class="{'main-navigation__item--active': filterType === `watchlist`}"
-      @click="setFilterType(`watchlist`)"
+      @click="setFilterType(`watchlist`, watchlistQuantity)"
     >
       Watchlist
       <span class="main-navigation__item-count"> {{ watchlistQuantity }} </span>
@@ -21,7 +21,7 @@
       href="#history"
       class="main-navigation__item"
       :class="{'main-navigation__item--active': filterType === `history`}"
-      @click="setFilterType(`history`)"
+      @click="setFilterType(`history`, historyQuantity)"
     >
       History
       <span class="main-navigation__item-count"> {{ historyQuantity }} </span>
@@ -30,7 +30,7 @@
       href="#favorites"
       class="main-navigation__item"
       :class="{'main-navigation__item--active': filterType === `favorite`}"
-      @click="setFilterType(`favorite`)"
+      @click="setFilterType(`favorite`, favoriteQuantity)"
     >
       Favorites
       <span class="main-navigation__item-count"> {{ favoriteQuantity }} </span>
@@ -62,10 +62,12 @@ export default {
     }
   },
   methods: {
-    setFilterType(filterType) {
-      this.$emit(`click`, filterType);
+    setFilterType(filterType, filteredMoviesQuantity) {
+      if (filteredMoviesQuantity) {
+        this.$emit(`click`, filterType);
 
-      this.filterType = filterType;
+        this.filterType = filterType;
+      }
     }
   }
 };

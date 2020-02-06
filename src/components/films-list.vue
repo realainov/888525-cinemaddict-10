@@ -1,9 +1,9 @@
 <template>
   <section :class="!isExtra ? `films-list` : `films-list--extra`">
-      <h2 class="films-list__title" :class="[!isExtra ? `visually-hidden` : ``]"> {{ title }}</h2>
+      <h2 class="films-list__title" :class="[!isShow ? `` : `visually-hidden`]"> {{ title }}</h2>
 
       <div class="films-list__container">
-        <FilmCard v-for="movie in sortMovies().slice(0, counter)" :key="movie.id" v-bind:movie="movie" />
+        <FilmCard v-for="movie in sortMovies().slice(0, counter)" :key="movie.id" :movie="movie" />
       </div>
 
       <ShowMore v-if="!isExtra" v-show="counter < filteredMovies.length" @click.native="counter += 5" />
@@ -22,6 +22,7 @@ export default {
   },
   props: [
     `isExtra`,
+    `isEmpty`,
     `movies`,
     `quantity`,
     `title`,
@@ -64,6 +65,9 @@ export default {
   computed: {
     filteredMovies() {
       return this.filterMovies();
+    },
+    isShow() {
+      return !this.isExtra || this.isEmpty;
     }
   }
 };
