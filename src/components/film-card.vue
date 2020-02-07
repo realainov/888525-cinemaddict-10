@@ -13,18 +13,21 @@
     <form class="film-card__controls">
       <button
         class="film-card__controls-item button film-card__controls-item--add-to-watchlist"
+        :class="{'film-card__controls-item--active': movie.userDetails.watchlist}"
         @click.prevent="addToWatchlist"
       >
         Add to watchlist
       </button>
       <button
         class="film-card__controls-item button film-card__controls-item--mark-as-watched"
+        :class="{'film-card__controls-item--active': movie.userDetails.alreadyWatched}"
         @click.prevent="markAsWatched"
       >
         Mark as watched
       </button>
       <button
         class="film-card__controls-item button film-card__controls-item--favorite"
+        :class="{'film-card__controls-item--active': movie.userDetails.favorite}"
         @click.prevent="markAsFavorite"
       >
         Mark as favorite
@@ -64,13 +67,13 @@ export default {
       this.$parent.$parent.$emit(`click`, this.movie);
     },
     addToWatchlist() {
-      this.movie.userDetails.watchlist = true;
+      this.movie.userDetails.watchlist = !this.movie.userDetails.watchlist;
     },
     markAsWatched() {
-      this.movie.userDetails.alreadyWatched = true;
+      this.movie.userDetails.alreadyWatched = !this.movie.userDetails.alreadyWatched;
     },
     markAsFavorite() {
-      this.movie.userDetails.favorite = true;
+      this.movie.userDetails.favorite = !this.movie.userDetails.favorite;
     }
   },
   watch: {

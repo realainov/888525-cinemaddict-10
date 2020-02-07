@@ -66,6 +66,7 @@
           <label
             for="watchlist"
             class="film-details__control-label film-details__control-label--watchlist"
+            :class="{'film-details__control-label--active': movie.userDetails.watchlist}"
             @click="addToWatchlist"
           >
             Add to watchlist
@@ -75,6 +76,7 @@
           <label
             for="watched"
             class="film-details__control-label film-details__control-label--watched"
+            :class="{'film-details__control-label--active': movie.userDetails.alreadyWatched}"
             @click="markAsWatched"
           >
             Already watched
@@ -84,6 +86,7 @@
           <label
             for="favorite"
             class="film-details__control-label film-details__control-label--favorite"
+            :class="{'film-details__control-label--active': movie.userDetails.favorite}"
             @click="markAsFavorite"
           >
             Add to favorites
@@ -191,13 +194,13 @@ export default {
       this.$emit(`close`, null);
     },
     addToWatchlist() {
-      this.movie.userDetails.watchlist = true;
+      this.movie.userDetails.watchlist = !this.movie.userDetails.watchlist;
     },
     markAsWatched() {
-      this.movie.userDetails.alreadyWatched = true;
+      this.movie.userDetails.alreadyWatched = !this.movie.userDetails.alreadyWatched;
     },
     markAsFavorite() {
-      this.movie.userDetails.favorite = true;
+      this.movie.userDetails.favorite = !this.movie.userDetails.favorite;
     },
     addComment(evt) {
       const element = evt.currentTarget;
