@@ -68,6 +68,7 @@
             class="film-details__control-label film-details__control-label--watchlist"
             @click="addToWatchlist"
           >
+            Add to watchlist
           </label>
 
           <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
