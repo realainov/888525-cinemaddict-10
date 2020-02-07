@@ -64,13 +64,13 @@ export default {
       this.$parent.$parent.$emit(`click`, this.movie);
     },
     addToWatchlist() {
-      this.movie.userDetails.watchlist = !this.movie.userDetails.watchlist;
+      this.movie.userDetails.watchlist = true;
     },
     markAsWatched() {
-      this.movie.userDetails.alreadyWatched = !this.movie.userDetails.alreadyWatched;
+      this.movie.userDetails.alreadyWatched = true;
     },
     markAsFavorite() {
-      this.movie.userDetails.favorite = !this.movie.userDetails.favorite;
+      this.movie.userDetails.favorite = true;
     }
   },
   watch: {

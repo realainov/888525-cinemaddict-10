@@ -696,6 +696,9 @@ button {
   font-size: 21px;
   cursor: pointer;
 }
+.film-details__control-label--active {
+  color: var(--text-color-active);
+}
 .film-details__control-label:not(:first-of-type) {
   border-left: 1px solid #31353f
 }
