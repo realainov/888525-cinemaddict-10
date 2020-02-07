@@ -100,25 +100,10 @@
               <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
             </label>
 
-            <div class="film-details__emoji-list">
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="sleeping">
-              <label class="film-details__emoji-label" for="emoji-smile">
-                <img src="images/emoji/smile.png" width="30" height="30" alt="emoji">
-              </label>
-
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="neutral-face">
-              <label class="film-details__emoji-label" for="emoji-sleeping">
-                <img src="images/emoji/sleeping.png" width="30" height="30" alt="emoji">
-              </label>
-
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-gpuke" value="grinning">
-              <label class="film-details__emoji-label" for="emoji-gpuke">
-                <img src="images/emoji/puke.png" width="30" height="30" alt="emoji">
-              </label>
-
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="grinning">
-              <label class="film-details__emoji-label" for="emoji-angry">
-                <img src="images/emoji/angry.png" width="30" height="30" alt="emoji">
+            <div class="film-details__emoji-list" v-for="(emotion, index) in emotions" :key="index">
+              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" :id="`emoji-${emotion}`" :value="emotion">
+              <label class="film-details__emoji-label" :for="`emoji-${emotion}`">
+                <img :src="`images/emoji/${emotion}.png`" width="30" height="30" alt="emoji">
               </label>
             </div>
           </div>
@@ -145,19 +130,20 @@ export default {
     const minutes = runtime % 60;
 
     return {
-      title: this.movie.filmInfo.title,
-      alternativeTitle: this.movie.filmInfo.alternativeTitle,
-      totalRating: this.movie.filmInfo.totalRating,
-      director: this.movie.filmInfo.director,
       ageRating: this.movie.filmInfo.ageRating,
+      alternativeTitle: this.movie.filmInfo.alternativeTitle,
+      comments: null,
+      commentsQuantity: this.movie.comments.length,
+      country: this.movie.filmInfo.release.releaseCountry,
+      description: this.movie.filmInfo.description,
+      director: this.movie.filmInfo.director,
+      emotions: [`smile`, `sleeping`, `puke`, `angry`],
+      genres: this.movie.filmInfo.genre,
+      poster: this.movie.filmInfo.poster,
       releaseDate: formatDate(this.movie.filmInfo.release.date),
       runtime: `${hours ? `${hours}H` : ``} ${minutes ? `${minutes}M` : ``}`,
-      country: this.movie.filmInfo.release.releaseCountry,
-      genres: this.movie.filmInfo.genre,
-      description: this.movie.filmInfo.description,
-      poster: this.movie.filmInfo.poster,
-      commentsQuantity: this.movie.comments.length,
-      comments: null
+      title: this.movie.filmInfo.title,
+      totalRating: this.movie.filmInfo.totalRating
     };
   },
   computed: {
