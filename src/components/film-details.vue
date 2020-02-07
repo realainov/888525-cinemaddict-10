@@ -217,7 +217,10 @@ export default {
           url: `comments/${this.movie.id}`,
           data: newComment
         })
-          .then((response) => (this.comments = response.data.comments))
+          .then((response) => {
+            this.comments = response.data.comments;
+            this.commentsQuantity = this.comments.length;
+          })
           .then(() => {
             commentElement.value = ``;
             emotionElement.checked = false;
