@@ -13,3 +13,7 @@ export const generateString = (quantity) => {
 export const formatDate = (date) => {
   return moment(date).format(`DD MMMM YYYY`);
 };
+
+export const formatDateTime = (date) => {
+  return moment(date).format(`YYYY/MM/DD HH:MM`);
+};

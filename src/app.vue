@@ -35,10 +35,13 @@ import Navigation from './components/navigation.vue';
 import Sort from './components/sort.vue';
 import Profile from './components/profile.vue';
 import FilmDetails from './components/film-details.vue';
-import Movie from './models/movie';
+import Movie from './models/movie.js';
 
-const URL = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
-const AUTHORIZATION = `Basic ieieuioeuio`;
+axios.defaults.baseURL = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
+axios.defaults.headers = {
+  [`Authorization`]: `Basic ineoihonio`,
+  [`Content-Type`]: `application/json`
+};
 
 export default {
   name: `app`,
@@ -69,8 +72,10 @@ export default {
     FilmDetails
   },
   mounted() {
-    axios
-      .get(`${URL}/movies`, {headers: {Authorization: AUTHORIZATION}})
+    axios({
+      method: `get`,
+      url: `/movies`
+    })
       .then((movies) => (this.movies = movies.data.map((movie) => new Movie(movie))));
   }
 };

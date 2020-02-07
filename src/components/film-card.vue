@@ -36,12 +36,11 @@
 <script>
 import axios from 'axios';
 
-const URL = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
-
 export default {
   name: `FilmCard`,
   props: [
-    `movie`
+    `movie`,
+    `comments`
   ],
   data() {
     const runtime = this.movie.filmInfo.runtime;
@@ -77,8 +76,11 @@ export default {
   watch: {
     movie: {
       handler(renewedMovie) {
-        axios
-          .put(`${URL}/movies/${renewedMovie.id}`, renewedMovie.toRAW());
+        axios({
+          method: `put`,
+          url: `/movies/${renewedMovie.id}`,
+          data: renewedMovie.toRAW()
+        });
       },
       deep: true
     }

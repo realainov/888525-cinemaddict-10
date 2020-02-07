@@ -52,7 +52,7 @@ export default class Movie {
       'user_details': {
         'personal_rating': this.userDetails.personalRating,
         'watchlist': this.userDetails.watchlist,
-        'already_watched': this.userDetails.alreadyWatch,
+        'already_watched': this.userDetails.alreadyWatched,
         'watching_date': this.userDetails.watchingDate,
         'favorite': this.userDetails.favorite
       }

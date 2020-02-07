@@ -1,8 +1,8 @@
-export default class CommentModel {
+export default class Comment {
   constructor(comment) {
     this.id = comment[`id`];
     this.author = comment[`author`];
-    this.comment = comment[`comment`];
+    this.text = comment[`comment`];
     this.date = comment[`date`];
     this.emotion = comment[`emotion`];
   }
@@ -11,7 +11,7 @@ export default class CommentModel {
     return {
       'id': this.id,
       'author': this.author,
-      'comment': this.comment,
+      'comment': this.text,
       'date': this.date,
       'emotion': this.emotion
     };

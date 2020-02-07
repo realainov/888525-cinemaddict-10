@@ -63,13 +63,13 @@
 
         <section class="film-details__controls">
           <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
-          <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
+          <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist" @click="addToWatchlist">Add to watchlist</label>
 
           <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
-          <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
+          <label for="watched" class="film-details__control-label film-details__control-label--watched" @click="markAsWatched">Already watched</label>
 
           <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
-          <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
+          <label for="favorite" class="film-details__control-label film-details__control-label--favorite" @click="markAsFavorite">Add to favorites</label>
         </section>
       </div>
 
@@ -78,55 +78,16 @@
           <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count"> {{ commentsQuantity }} </span></h3>
 
           <ul class="film-details__comments-list">
-            <li class="film-details__comment">
+            <li class="film-details__comment" v-for="(comment, index) in comments" :key="comment.id">
             <span class="film-details__comment-emoji">
-              <img src="" width="55" height="55" alt="emoji">
+              <img :src="`images/emoji/${comment.emotion}.png`" width="55" height="55" alt="emoji">
             </span>
               <div>
-                <p class="film-details__comment-text">Interesting setting and a good cast</p>
+                <p class="film-details__comment-text"> {{ comment.text }} </p>
                 <p class="film-details__comment-info">
-                  <span class="film-details__comment-author">Tim Macoveev</span>
-                  <span class="film-details__comment-day">2019/12/31 23:59</span>
-                  <button class="film-details__comment-delete">Delete</button>
-                </p>
-              </div>
-            </li>
-            <li class="film-details__comment">
-            <span class="film-details__comment-emoji">
-              <img src="" width="55" height="55" alt="emoji">
-            </span>
-              <div>
-                <p class="film-details__comment-text">Booooooooooring</p>
-                <p class="film-details__comment-info">
-                  <span class="film-details__comment-author">John Doe</span>
-                  <span class="film-details__comment-day">2 days ago</span>
-                  <button class="film-details__comment-delete">Delete</button>
-                </p>
-              </div>
-            </li>
-            <li class="film-details__comment">
-            <span class="film-details__comment-emoji">
-              <img src="" width="55" height="55" alt="emoji">
-            </span>
-              <div>
-                <p class="film-details__comment-text">Very very old. Meh</p>
-                <p class="film-details__comment-info">
-                  <span class="film-details__comment-author">John Doe</span>
-                  <span class="film-details__comment-day">2 days ago</span>
-                  <button class="film-details__comment-delete">Delete</button>
-                </p>
-              </div>
-            </li>
-            <li class="film-details__comment">
-            <span class="film-details__comment-emoji">
-              <img src="" width="55" height="55" alt="emoji">
-            </span>
-              <div>
-                <p class="film-details__comment-text">Almost two hours? Seriously?</p>
-                <p class="film-details__comment-info">
-                  <span class="film-details__comment-author">John Doe</span>
-                  <span class="film-details__comment-day">Today</span>
-                  <button class="film-details__comment-delete">Delete</button>
+                  <span class="film-details__comment-author"> {{ comment.author }} </span>
+                  <span class="film-details__comment-day"> {{ formatDateTime(comment.date) }} </span>
+                  <button class="film-details__comment-delete" @click.prevent="deleteComment(index)">Delete</button>
                 </p>
               </div>
             </li>
@@ -142,22 +103,22 @@
             <div class="film-details__emoji-list">
               <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="sleeping">
               <label class="film-details__emoji-label" for="emoji-smile">
-                <img src="" width="30" height="30" alt="emoji">
+                <img src="images/emoji/smile.png" width="30" height="30" alt="emoji">
               </label>
 
               <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="neutral-face">
               <label class="film-details__emoji-label" for="emoji-sleeping">
-                <img src="" width="30" height="30" alt="emoji">
+                <img src="images/emoji/sleeping.png" width="30" height="30" alt="emoji">
               </label>
 
               <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-gpuke" value="grinning">
               <label class="film-details__emoji-label" for="emoji-gpuke">
-                <img src="" width="30" height="30" alt="emoji">
+                <img src="images/emoji/puke.png" width="30" height="30" alt="emoji">
               </label>
 
               <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="grinning">
               <label class="film-details__emoji-label" for="emoji-angry">
-                <img src="" width="30" height="30" alt="emoji">
+                <img src="images/emoji/angry.png" width="30" height="30" alt="emoji">
               </label>
             </div>
           </div>
@@ -168,7 +129,9 @@
 </template>
 
 <script>
-import {formatDate} from '../utils/common';
+import Comment from '../models/comment.js';
+import {formatDate, formatDateTime} from '../utils/common';
+import axios from "axios";
 
 export default {
   name: `FilmDetails`,
@@ -192,8 +155,9 @@ export default {
       country: this.movie.filmInfo.release.releaseCountry,
       genres: this.movie.filmInfo.genre,
       description: this.movie.filmInfo.description,
+      poster: this.movie.filmInfo.poster,
       commentsQuantity: this.movie.comments.length,
-      poster: this.movie.filmInfo.poster
+      comments: null
     };
   },
   computed: {
@@ -207,7 +171,38 @@ export default {
   methods: {
     closePopup() {
       this.$emit(`close`, null);
-    }
+    },
+    addToWatchlist() {
+      this.movie.userDetails.watchlist = !this.movie.userDetails.watchlist;
+    },
+    markAsWatched() {
+      this.movie.userDetails.alreadyWatched = !this.movie.userDetails.alreadyWatched;
+    },
+    markAsFavorite() {
+      this.movie.userDetails.favorite = !this.movie.userDetails.favorite;
+    },
+    addComment(newComment) {
+      axios({
+        method: `post`,
+        url: `comments/${this.movie.id}`,
+        data: newComment
+      })
+      .then((comment) => {
+        this.comments.push(new Comment(comment));
+      });
+    },
+    deleteComment(index) {
+      axios({
+        method: `delete`,
+        url: `comments/${this.comments[index].id}`
+      })
+      .then(() => {
+        this.comments = [].concat(this.comments.slice(0, index), this.comments.slice(index + 1));
+        this.commentsQuantity = this.comments.length;
+      });
+    },
+    formatDate,
+    formatDateTime
   },
   created() {
     window.addEventListener(`keydown`, (evt) => {
@@ -217,7 +212,25 @@ export default {
         this.closePopup();
       }
     });
-
+  },
+  watch: {
+    movie: {
+      handler(renewedMovie) {
+        axios({
+          method: `put`,
+          url: `/movies/${renewedMovie.id}`,
+          data: renewedMovie.toRAW()
+        });
+      },
+      deep: true
+    }
+  },
+  mounted() {
+    axios({
+      method: `get`,
+      url: `/comments/${this.movie.id}`
+    })
+      .then((comments) => (this.comments = comments.data.map((comment) => new Comment(comment))));
   }
 };
 </script>
