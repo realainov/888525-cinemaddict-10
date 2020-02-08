@@ -4,7 +4,7 @@
       href="#all"
       class="main-navigation__item"
       :class="{'main-navigation__item--active': filterType === `all`}"
-      @click="setFilterType(`all`, movies)"
+      @click="openSection(`all`, movies)"
     >
       All movies
     </a>
@@ -12,7 +12,7 @@
       href="#watchlist"
       class="main-navigation__item"
       :class="{'main-navigation__item--active': filterType === `watchlist`}"
-      @click="setFilterType(`watchlist`, watchlistQuantity)"
+      @click="openSection(`watchlist`, watchlistQuantity)"
     >
       Watchlist
       <span class="main-navigation__item-count"> {{ watchlistQuantity }} </span>
@@ -21,7 +21,7 @@
       href="#history"
       class="main-navigation__item"
       :class="{'main-navigation__item--active': filterType === `history`}"
-      @click="setFilterType(`history`, historyQuantity)"
+      @click="openSection(`history`, historyQuantity)"
     >
       History
       <span class="main-navigation__item-count"> {{ historyQuantity }} </span>
@@ -30,12 +30,18 @@
       href="#favorites"
       class="main-navigation__item"
       :class="{'main-navigation__item--active': filterType === `favorite`}"
-      @click="setFilterType(`favorite`, favoriteQuantity)"
+      @click="openSection(`favorite`, favoriteQuantity)"
     >
       Favorites
       <span class="main-navigation__item-count"> {{ favoriteQuantity }} </span>
     </a>
-    <a href="#stats" class="main-navigation__item main-navigation__item--additional">Stats</a>
+    <a
+      href="#stats"
+      class="main-navigation__item main-navigation__item--additional"
+      @click="openSection(`stats`)"
+    >
+      Stats
+    </a>
   </nav>
 </template>
 
@@ -62,11 +68,20 @@ export default {
     }
   },
   methods: {
-    setFilterType(filterType, filteredMoviesQuantity) {
-      if (filteredMoviesQuantity) {
-        this.$emit(`click`, filterType);
+    openSection(section, filteredMoviesQuantity) {
+      switch (section) {
+        case `stats`:
+          this.$emit(`click`, section);
 
-        this.filterType = filterType;
+          break;
+        default:
+          if (filteredMoviesQuantity) {
+            this.$emit(`click`, section);
+
+            this.filterType = section;
+          }
+
+          break;
       }
     }
   }

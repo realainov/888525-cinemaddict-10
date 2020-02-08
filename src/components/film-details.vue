@@ -21,6 +21,7 @@
 
               <div class="film-details__rating">
                 <p class="film-details__total-rating"> {{ totalRating }} </p>
+                <p class="film-details__user-rating" v-if="userRating">Your rate {{ userRating }} </p>
               </div>
             </div>
 
@@ -62,35 +63,163 @@
         </div>
 
         <section class="film-details__controls">
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
+          <input
+            type="checkbox"
+            class="film-details__control-input visually-hidden"
+            id="watchlist"
+            name="watchlist"
+            :checked="watchlist"
+          >
           <label
             for="watchlist"
             class="film-details__control-label film-details__control-label--watchlist"
-            :class="{'film-details__control-label--active': movie.userDetails.watchlist}"
-            @click="addToWatchlist"
+            @click.prevent="addToWatchlist"
           >
             Add to watchlist
           </label>
 
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
+          <input
+            type="checkbox"
+            class="film-details__control-input visually-hidden"
+            id="watched"
+            name="watched"
+            :checked="alreadyWatched"
+          >
           <label
             for="watched"
             class="film-details__control-label film-details__control-label--watched"
-            :class="{'film-details__control-label--active': movie.userDetails.alreadyWatched}"
-            @click="markAsWatched"
+            @click.prevent="markAsWatched"
           >
             Already watched
           </label>
 
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
+          <input
+            type="checkbox"
+            class="film-details__control-input visually-hidden"
+            id="favorite"
+            name="favorite"
+            :checked="favorite"
+          >
           <label
             for="favorite"
             class="film-details__control-label film-details__control-label--favorite"
-            :class="{'film-details__control-label--active': movie.userDetails.favorite}"
-            @click="markAsFavorite"
+            @click.prevent="markAsFavorite"
           >
             Add to favorites
           </label>
+        </section>
+      </div>
+
+      <div class="form-details__middle-container" v-if="alreadyWatched">
+        <section class="film-details__user-rating-wrap">
+          <div class="film-details__user-rating-controls">
+            <button class="film-details__watched-reset" type="button" @click="resetUserRating">Undo</button>
+          </div>
+
+          <div class="film-details__user-score">
+            <div class="film-details__user-rating-poster">
+              <img :src="poster" alt="film-poster" class="film-details__user-rating-img">
+            </div>
+
+            <section class="film-details__user-rating-inner">
+              <h3 class="film-details__user-rating-title"> {{ title }} </h3>
+
+              <p class="film-details__user-rating-feelings">How you feel it?</p>
+
+              <div class="film-details__user-rating-score" @change="setUserRating">
+                <input
+                  type="radio"
+                  name="score"
+                  class="film-details__user-rating-input visually-hidden"
+                  value="1"
+                  id="rating-1"
+                  :checked="userRating === 1"
+                >
+                <label class="film-details__user-rating-label" for="rating-1">1</label>
+
+                <input
+                  type="radio"
+                  name="score"
+                  class="film-details__user-rating-input visually-hidden"
+                  value="2"
+                  id="rating-2"
+                  :checked="userRating === 2"
+                >
+                <label class="film-details__user-rating-label" for="rating-2">2</label>
+
+                <input
+                  type="radio"
+                  name="score"
+                  class="film-details__user-rating-input visually-hidden"
+                  value="3"
+                  id="rating-3"
+                  :checked="userRating === 3"
+                >
+                <label class="film-details__user-rating-label" for="rating-3">3</label>
+
+                <input
+                  type="radio"
+                  name="score"
+                  class="film-details__user-rating-input visually-hidden"
+                  value="4"
+                  id="rating-4"
+                  :checked="userRating === 4"
+                >
+                <label class="film-details__user-rating-label" for="rating-4">4</label>
+
+                <input
+                  type="radio"
+                  name="score"
+                  class="film-details__user-rating-input visually-hidden"
+                  value="5"
+                  id="rating-5"
+                  :checked="userRating === 5"
+                >
+                <label class="film-details__user-rating-label" for="rating-5">5</label>
+
+                <input
+                  type="radio"
+                  name="score"
+                  class="film-details__user-rating-input visually-hidden"
+                  value="6"
+                  id="rating-6"
+                  :checked="userRating === 6"
+                >
+                <label class="film-details__user-rating-label" for="rating-6">6</label>
+
+                <input
+                  type="radio"
+                  name="score"
+                  class="film-details__user-rating-input visually-hidden"
+                  value="7"
+                  id="rating-7"
+                  :checked="userRating === 7"
+                >
+                <label class="film-details__user-rating-label" for="rating-7">7</label>
+
+                <input
+                  type="radio"
+                  name="score"
+                  class="film-details__user-rating-input visually-hidden"
+                  value="8"
+                  id="rating-8"
+                  :checked="userRating === 8"
+                >
+                <label class="film-details__user-rating-label" for="rating-8">8</label>
+
+                <input
+                  type="radio"
+                  name="score"
+                  class="film-details__user-rating-input visually-hidden"
+                  value="9"
+                  id="rating-9"
+                  :checked="userRating === 9"
+                >
+                <label class="film-details__user-rating-label" for="rating-9">9</label>
+
+              </div>
+            </section>
+          </div>
         </section>
       </div>
 
@@ -115,13 +244,15 @@
           </ul>
 
           <div class="film-details__new-comment" @keydown.enter.prevent="addComment">
-            <div for="add-emoji" class="film-details__add-emoji-label"></div>
+            <div for="add-emoji" class="film-details__add-emoji-label">
+              <img v-if="emotion" :src="`images/emoji/${emotion}.png`" width="55" height="55" alt="emoji">
+            </div>
 
             <label class="film-details__comment-label">
               <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
             </label>
 
-            <div class="film-details__emoji-list">
+            <div class="film-details__emoji-list" @change="addEmotion">
               <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
               <label class="film-details__emoji-label" for="emoji-smile">
                 <img src="images/emoji/smile.png" width="30" height="30" alt="emoji">
@@ -152,7 +283,9 @@
 <script>
 import Comment from '../models/comment.js';
 import {formatDate, formatDateTime} from '../utils/common';
-import axios from "axios";
+import axios from 'axios';
+import he from 'he';
+import lodash from 'lodash';
 
 export default {
   name: `FilmDetails`,
@@ -160,28 +293,70 @@ export default {
     `movie`
   ],
   data() {
-    const runtime = this.movie.filmInfo.runtime;
-
-    const hours = Math.floor(runtime / 60);
-    const minutes = runtime % 60;
-
     return {
-      ageRating: this.movie.filmInfo.ageRating,
-      alternativeTitle: this.movie.filmInfo.alternativeTitle,
       comments: null,
-      commentsQuantity: this.movie.comments.length,
-      country: this.movie.filmInfo.release.releaseCountry,
-      description: this.movie.filmInfo.description,
-      director: this.movie.filmInfo.director,
-      genres: this.movie.filmInfo.genre,
-      poster: this.movie.filmInfo.poster,
-      releaseDate: formatDate(this.movie.filmInfo.release.date),
-      runtime: `${hours ? `${hours}H` : ``} ${minutes ? `${minutes}M` : ``}`,
-      title: this.movie.filmInfo.title,
-      totalRating: this.movie.filmInfo.totalRating
+      emotion: null,
+      test: null
     };
   },
   computed: {
+    ageRating() {
+      return this.movie.filmInfo.ageRating;
+    },
+    alreadyWatched() {
+      return this.movie.userDetails.alreadyWatched;
+    },
+    alternativeTitle() {
+      return this.movie.filmInfo.alternativeTitle;
+    },
+    country() {
+      return this.movie.filmInfo.release.releaseCountry;
+    },
+    commentsQuantity() {
+      if (this.comments) {
+        return this.comments.length;
+      }
+
+      return this.movie.comments.length;
+    },
+    description() {
+      return this.movie.filmInfo.description;
+    },
+    director() {
+      return this.movie.filmInfo.director;
+    },
+    genres() {
+      return this.movie.filmInfo.genre;
+    },
+    favorite() {
+      return this.movie.userDetails.favorite;
+    },
+    poster() {
+      return this.movie.filmInfo.poster;
+    },
+    releaseDate() {
+      return formatDate(this.movie.filmInfo.release.date);
+    },
+    runtime() {
+      const runtime = this.movie.filmInfo.runtime;
+
+      const hours = Math.floor(runtime / 60);
+      const minutes = runtime % 60;
+
+      return `${hours ? `${hours}H` : ``} ${minutes ? `${minutes}M` : ``}`;
+    },
+    title() {
+      return this.movie.filmInfo.title;
+    },
+    totalRating() {
+      return this.movie.filmInfo.totalRating;
+    },
+    userRating() {
+      return this.movie.userDetails.personalRating;
+    },
+    watchlist() {
+      return this.movie.userDetails.watchlist;
+    },
     writers() {
       return this.movie.filmInfo.writers.join(`, `);
     },
@@ -194,13 +369,29 @@ export default {
       this.$emit(`close`, null);
     },
     addToWatchlist() {
-      this.movie.userDetails.watchlist = !this.movie.userDetails.watchlist;
+      this.sendData({
+        userDetails: {
+          watchlist: !this.movie.userDetails.watchlist
+        }
+      });
     },
     markAsWatched() {
-      this.movie.userDetails.alreadyWatched = !this.movie.userDetails.alreadyWatched;
+      this.sendData({
+        userDetails: {
+          alreadyWatched: !this.movie.userDetails.alreadyWatched,
+          personalRating: !this.movie.userDetails.alreadyWatched ? 0 : this.movie.userDetails.personalRating
+        }
+      });
     },
     markAsFavorite() {
-      this.movie.userDetails.favorite = !this.movie.userDetails.favorite;
+      this.sendData({
+        userDetails: {
+          favorite: !this.movie.userDetails.favorite
+        }
+      });
+    },
+    addEmotion(evt) {
+      this.emotion = evt.target.value;
     },
     addComment(evt) {
       const element = evt.currentTarget;
@@ -210,7 +401,7 @@ export default {
 
       if (emotionElement) {
         const newComment = new Comment({
-          comment: commentElement.value,
+          comment: he.decode(commentElement.value),
           emotion: emotionElement.value,
           date: new Date()
         });
@@ -220,10 +411,7 @@ export default {
           url: `comments/${this.movie.id}`,
           data: newComment
         })
-          .then((response) => {
-            this.comments = response.data.comments;
-            this.commentsQuantity = this.comments.length;
-          })
+          .then((response) => (this.comments = response.data.comments))
           .then(() => {
             commentElement.value = ``;
             emotionElement.checked = false;
@@ -237,8 +425,46 @@ export default {
       })
       .then(() => {
         this.comments = [].concat(this.comments.slice(0, index), this.comments.slice(index + 1));
-        this.commentsQuantity = this.comments.length;
       });
+    },
+    setUserRating(evt) {
+      this.sendData({
+        userDetails: {
+          personalRating: +evt.target.value
+        }
+      });
+    },
+    resetUserRating() {
+      this.sendData({
+        userDetails: {
+          personalRating: 0
+        }
+      });
+    },
+    disabledForm(isDisabledForm) {
+      const formControlsElements = this.$el.querySelectorAll(`input, textarea, button`);
+
+      formControlsElements.forEach((formControlElement) => {
+        formControlElement.disabled = isDisabledForm;
+      });
+    },
+    sendData(newData) {
+      this.disabledForm(true);
+
+      let newMovie = lodash.cloneDeep(this.movie);
+
+      newMovie = lodash.merge(newMovie, newData);
+
+      axios({
+        method: `put`,
+        url: `/movies/${newMovie.id}`,
+        data: newMovie.toRAW()
+      })
+        .then(() => {
+          lodash.merge(this.movie, newData);
+
+          this.disabledForm(false);
+        });
     },
     formatDate,
     formatDateTime
@@ -251,18 +477,6 @@ export default {
         this.closePopup();
       }
     });
-  },
-  watch: {
-    movie: {
-      handler(renewedMovie) {
-        axios({
-          method: `put`,
-          url: `/movies/${renewedMovie.id}`,
-          data: renewedMovie.toRAW()
-        });
-      },
-      deep: true
-    }
   },
   mounted() {
     axios({

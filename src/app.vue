@@ -12,6 +12,7 @@
       <Sort @click="setSortType" />
 
       <Films :sortType="sortType" :filterType="filterType" :movies="movies" @click="setCurrentMovie" />
+      <Statistics :movies="movies" />
     </main>
 
 
@@ -35,6 +36,7 @@ import Navigation from './components/navigation.vue';
 import Sort from './components/sort.vue';
 import Profile from './components/profile.vue';
 import FilmDetails from './components/film-details.vue';
+import Statistics from './components/statistics.vue';
 import Movie from './models/movie.js';
 
 axios.defaults.baseURL = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
@@ -69,7 +71,8 @@ export default {
     Navigation,
     Sort,
     Profile,
-    FilmDetails
+    FilmDetails,
+    Statistics
   },
   mounted() {
     axios({
