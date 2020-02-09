@@ -17,3 +17,12 @@ export const formatDate = (date) => {
 export const formatDateTime = (date) => {
   return moment(date).format(`YYYY/MM/DD HH:MM`);
 };
+
+export const isThisTimeRange = (date, range) => {
+  const todayDate = new Date();
+
+  const firstDate = moment(date);
+  const secondDate = moment(todayDate);
+
+  return firstDate.diff(secondDate, range) === 0;
+};

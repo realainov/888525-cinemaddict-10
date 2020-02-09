@@ -6,7 +6,7 @@
       <span class="statistic__rank-label"> {{ profileStatus }} </span>
     </p>
 
-    <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
+    <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters" @change="setTimeRange">
       <p class="statistic__filters-description">Show stats:</p>
 
       <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-all-time" value="all-time" checked>
@@ -28,7 +28,7 @@
     <ul class="statistic__text-list">
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">You watched</h4>
-        <p class="statistic__item-text">{{ watchedQuantity }} <span class="statistic__item-description">movies</span></p>
+        <p class="statistic__item-text">{{ alreadyWatchedQuantity }} <span class="statistic__item-description">movies</span></p>
       </li>
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">Total duration</h4>
@@ -48,6 +48,9 @@
 </template>
 
 <script>
+import lodash from 'lodash';
+import {isThisTimeRange} from '../utils/common.js';
+
 export default {
   name: `Statistics`,
   props: [
@@ -55,21 +58,26 @@ export default {
   ],
   data() {
     return {
-      filteredMovies: this.watchedMovies
+      filteredWatchedMovies: []
     };
   },
+  watch: {
+    allWatchedMovies() {
+      this.filteredWatchedMovies = this.allWatchedMovies;
+    }
+  },
   computed: {
-    watchedMovies() {
-      return this.movies.filter((movie) => movie.userDetails.alreadyWatched);
+    allAlreadyWatchedQuantity() {
+      return this.allWatchedMovies.length;
     },
     alreadyWatchedQuantity() {
-      return this.movies.reduce((sum, movie) => sum + +movie.userDetails.alreadyWatched, 0);
+      return this.filteredWatchedMovies.length;
     },
-    watchedQuantity() {
-      return this.movies.filter((movie) => movie.userDetails.alreadyWatched).length;
+    allWatchedMovies() {
+      return this.movies.filter((movie) => movie.userDetails.alreadyWatched);
     },
     totalDuration() {
-      const totalRuntime = this.watchedMovies.reduce((sum, watchedMovie) => {
+      const totalRuntime = this.filteredWatchedMovies.reduce((sum, watchedMovie) => {
         return sum + watchedMovie.filmInfo.runtime;
       }, 0);
 
@@ -79,28 +87,64 @@ export default {
       return {hours, minutes};
     },
     favoriteGenre() {
-      const genres = [].concat(...this.watchedMovies.map((watchedMovie) => watchedMovie.filmInfo.genre));
+      const genres = [].concat(...this.filteredWatchedMovies.map((watchedMovie) => watchedMovie.filmInfo.genre));
 
-      const reps = genres.reduce((sum, item) => {
-        const newCount = (sum[item] || 0) + 1;
-        return {...sum, [item]: newCount};
+      const reps = genres.reduce((sum, genre) => {
+        const newCount = (sum[genre] || 0) + 1;
+
+        return {...sum, [genre]: newCount};
       }, {});
 
-      const maxTimes = Math.max.apply(null, Object.values(reps));
+      const maxTimes = lodash.max(Object.values(reps));
 
-      const [favoriteGenre] = Object.entries(reps).find(([, val]) => val === maxTimes);
+      let favoriteGenre = Object.entries(reps).find(([, val]) => val === maxTimes);
+
+      [favoriteGenre] = favoriteGenre ? favoriteGenre : ``;
 
       return favoriteGenre;
     },
     profileStatus() {
-      if (this.alreadyWatchedQuantity === 0) {
+      if (this.allAlreadyWatchedQuantity === 0) {
         return ``;
-      } else if (this.alreadyWatchedQuantity > 0 && this.alreadyWatchedQuantity < 11) {
+      } else if (this.allAlreadyWatchedQuantity > 0 && this.allAlreadyWatchedQuantity < 11) {
         return `Novice`;
-      } else if (this.alreadyWatchedQuantity > 10 && this.alreadyWatchedQuantity < 21) {
+      } else if (this.allAlreadyWatchedQuantity > 10 && this.allAlreadyWatchedQuantity < 21) {
         return `Fan`;
       } else {
         return `Movie Buff`;
+      }
+    }
+  },
+  methods: {
+    filterMovies(range) {
+      this.filteredWatchedMovies = this.allWatchedMovies.filter((watchedMovie) => {
+        const watchingDate = watchedMovie.userDetails.watchingDate;
+
+        return isThisTimeRange(watchingDate, range);
+      });
+    },
+    setTimeRange(evt) {
+      switch (evt.target.value) {
+        case `all-time`:
+          this.filteredWatchedMovies = this.allWatchedMovies.slice();
+
+          break;
+        case `today`:
+          this.filterMovies(`days`);
+
+          break;
+        case `week`:
+          this.filterMovies(`weeks`);
+
+          break;
+        case `month`:
+          this.filterMovies(`months`);
+
+          break;
+        case `year`:
+          this.filterMovies(`years`);
+
+          break;
       }
     }
   }

@@ -7,12 +7,12 @@
     </header>
 
     <main class="main">
-      <Navigation @click="setFilterType" :movies="movies" />
+      <Navigation @click="setActiveNavigationItem" :movies="movies" />
 
       <Sort @click="setSortType" />
 
-      <Films :sortType="sortType" :filterType="filterType" :movies="movies" @click="setCurrentMovie" />
-      <Statistics :movies="movies" />
+      <Films :sortType="sortType" :filterType="filterType" :movies="movies" v-show="activeComponent === `Films`" @click="setCurrentMovie" />
+      <Statistics :movies="movies" v-show="activeComponent === `Statistics`" />
     </main>
 
 
@@ -52,15 +52,24 @@ export default {
       movies: [],
       sortType: `default`,
       filterType: `all`,
-      currentMovie: null
+      currentMovie: null,
+      activeComponent: `Films`
     };
   },
   methods: {
     setSortType(sortType) {
       this.sortType = sortType;
     },
-    setFilterType(filterType) {
-      this.filterType = filterType;
+    setActiveNavigationItem(activeNavigationItem) {
+      switch (activeNavigationItem) {
+        case `stats`:
+          this.activeComponent = `Statistics`;
+
+          break;
+        default:
+          this.activeComponent = `Films`;
+          this.filterType = activeNavigationItem;
+      }
     },
     setCurrentMovie(movie) {
       this.currentMovie = movie;

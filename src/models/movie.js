@@ -12,7 +12,7 @@ export default class Movie {
       writers: movie[`film_info`][`writers`],
       actors: movie[`film_info`][`actors`],
       release: {
-        date: movie[`film_info`][`release`][`date`],
+        date: new Date(movie[`film_info`][`release`][`date`]),
         releaseCountry: movie[`film_info`][`release`][`release_country`]
       },
       runtime: movie[`film_info`][`runtime`],
@@ -23,7 +23,7 @@ export default class Movie {
       personalRating: movie[`user_details`][`personal_rating`],
       watchlist: movie[`user_details`][`watchlist`],
       alreadyWatched: movie[`user_details`][`already_watched`],
-      watchingDate: movie[`user_details`][`watching_date`],
+      watchingDate: new Date(movie[`user_details`][`watching_date`]),
       favorite: movie[`user_details`][`favorite`]
     };
   }
