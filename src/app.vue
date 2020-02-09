@@ -30,7 +30,7 @@
 
 <script>
 import axios from 'axios';
-// import {generateString} from './utils/common.js';
+import {generateString} from './utils/common.js';
 import Films from './components/films.vue';
 import Navigation from './components/navigation.vue';
 import Sort from './components/sort.vue';
@@ -41,7 +41,7 @@ import Movie from './models/movie.js';
 
 axios.defaults.baseURL = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
 axios.defaults.headers = {
-  [`Authorization`]: `Basic ineoihonio`,
+  [`Authorization`]: `Basic ${generateString(6)}`,
   [`Content-Type`]: `application/json`
 };
 
