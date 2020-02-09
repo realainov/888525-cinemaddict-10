@@ -237,7 +237,7 @@
                 <p class="film-details__comment-info">
                   <span class="film-details__comment-author"> {{ comment.author }} </span>
                   <span class="film-details__comment-day"> {{ formatDateTime(comment.date) }} </span>
-                  <button class="film-details__comment-delete" @click.prevent="deleteComment(index)">Delete</button>
+                  <button class="film-details__comment-delete" @click.prevent="deleteComment($event, index)">Delete</button>
                 </p>
               </div>
             </li>
@@ -394,6 +394,8 @@ export default {
       this.emotion = evt.target.value;
     },
     addComment(evt) {
+      this.disabledForm(true);
+
       const element = evt.currentTarget;
 
       const commentElement = element.querySelector(`.film-details__comment-input`);
@@ -415,17 +417,26 @@ export default {
           .then(() => {
             commentElement.value = ``;
             emotionElement.checked = false;
-          });
+            this.disabledForm(false);
+          })
+          .catch(() => this.disabledForm(false));
       }
     },
-    deleteComment(index) {
+    deleteComment(evt, index) {
+      const element = evt.target;
+
+      element.textContent = `Deleting...`;
+
       axios({
         method: `delete`,
         url: `comments/${this.comments[index].id}`
       })
-      .then(() => {
-        this.comments = [].concat(this.comments.slice(0, index), this.comments.slice(index + 1));
-      });
+        .then(() => {
+          this.comments = [].concat(this.comments.slice(0, index), this.comments.slice(index + 1));
+
+          element.textContent = `Delete`;
+        })
+        .catch(() => (element.textContent = `Delete`));
     },
     setUserRating(evt) {
       this.sendData({
