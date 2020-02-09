@@ -245,7 +245,7 @@
 
           <div class="film-details__new-comment" @keydown.enter.prevent="addComment">
             <div for="add-emoji" class="film-details__add-emoji-label">
-              <img v-if="emotion" :src="`images/emoji/${emotion}.png`" width="55" height="55" alt="emoji">
+              <img v-show="emotion" :src="`images/emoji/${emotion}.png`" width="55" height="55" alt="emoji">
             </div>
 
             <label class="film-details__comment-label">
@@ -295,8 +295,7 @@ export default {
   data() {
     return {
       comments: null,
-      emotion: null,
-      test: null
+      emotion: null
     };
   },
   computed: {
@@ -415,6 +414,7 @@ export default {
         })
           .then((response) => (this.comments = response.data.comments))
           .then(() => {
+            this.emotion = null;
             commentElement.value = ``;
             emotionElement.checked = false;
             this.disabledForm(false);
